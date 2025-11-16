@@ -4,10 +4,10 @@ export default async function PickPage({ params }: { params: { token: string } }
   const token = params.token
   const existing = await getAssignment(token)
 
-  async function pickAction(formData: FormData) {
+  async function pickAction(formData: FormData): Promise<void> {
     'use server'
-    // call assign on server
-    return await assign(token)
+    // call assign on server, ignore returned value to satisfy form action typing
+    await assign(token)
   }
 
   return (
