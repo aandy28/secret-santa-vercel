@@ -3,7 +3,7 @@ import { useState } from 'react'
 
 export default function AdminPage() {
   const [names, setNames] = useState<string[]>([
-    'Alice','Bob','Carl','Dana','Eve','Frank','Gina','Harry','Ivy','John'
+    'Andy','Meg','Mark','Heidi','Chris','Becca','Tom','Michaela','Pete','Julia'
   ])
   const [links, setLinks] = useState<{name:string; url:string}[]>([])
   const [loading, setLoading] = useState(false)

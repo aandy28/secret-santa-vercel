@@ -4,6 +4,7 @@ import { initParticipants } from '@lib/store'
 
 export async function POST(req: Request) {
   const body = await req.json()
+  console.log('request',body)
   const names = body.names || []
   const tokens = createTokens(names)
   await initParticipants(names)
