@@ -1,4 +1,4 @@
-import { getAssignment, assign } from '@/lib/store'
+import { getAssignment, assign } from '@lib/store'
 
 export default async function PickPage({ params }: { params: { token: string } }) {
   const token = params.token
