@@ -1,39 +1,17 @@
-import { promises as fs } from 'fs'
-const FILE = '/tmp/santa.json'
-
-type Store = {
-  participants: string[],
-  assignments: Record<string, string>,
-  taken: string[],
-  restrictions: Record<string, string[]>
-}
-
-async function load(): Promise<Store> {
-  try {
-    const raw = await fs.readFile(FILE, 'utf8')
-    console.log(raw);
-    return JSON.parse(raw)
-  } catch {
-    return { participants: [], assignments: {}, taken: [], restrictions: {} }
-  }
-}
-
-async function save(data: Store) {
-  await fs.writeFile(FILE, JSON.stringify(data, null, 2), 'utf8')
-}
+import { loadStore, saveStore, type Store } from './storage'
 
 export async function initParticipants(participants: string[], assignments?: Record<string, string>, taken?: string[], restrictions?: Record<string, string[]>) {
-  const data = await load()
+  const data = await loadStore()
   data.participants = participants
   data.assignments = assignments ?? {}
   data.taken = taken ?? []
   data.restrictions = restrictions ?? {}
-  await save(data)
+  await saveStore(data)
   return data
 }
 
 export async function assign(token: string) {
-  const data = await load()
+  const data = await loadStore()
   // find participant name from token (we encoded name in token)
   let participantName: string | null = null
   try {
@@ -58,7 +36,7 @@ export async function assign(token: string) {
   }
 
   // compute remaining eligible participants
-  const remaining = data.participants.filter(p => p !== participantName && !data.taken.includes(p))
+  const remaining = data.participants.filter((p: string) => p !== participantName && !data.taken.includes(p))
   if (remaining.length === 0) {
     console.error('assign: no remaining eligible participants', { participantName, participants: data.participants, taken: data.taken })
     return null
@@ -67,13 +45,13 @@ export async function assign(token: string) {
   const pick = remaining[Math.floor(Math.random() * remaining.length)]
   data.assignments[token] = pick
   data.taken.push(pick)
-  await save(data)
+  await saveStore(data)
   console.log('assign: assigned pick', { token, participantName, pick })
   return pick
 }
 
 export async function getAssignment(token: string) {
-  const data = await load()
+  const data = await loadStore()
   const assignment = data.assignments[token] || null
   if (assignment) console.log('getAssignment: found', { token, assignment })
   else console.log('getAssignment: none for token', { token })
