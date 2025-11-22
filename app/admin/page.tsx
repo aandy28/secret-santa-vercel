@@ -20,7 +20,9 @@ export default function AdminPage() {
     'Chris': ['Becca'],
     'Becca': ['Chris'],
     'Tom': ['Michaela'],
-    'Michaela': ['Tom']
+    'Michaela': ['Tom'],
+    'Pete': ['Julia'],
+    'Julia': ['Pete']
   })
   const [links, setLinks] = useState<{ name: string; url: string }[]>([])
   const [loading, setLoading] = useState(false)
